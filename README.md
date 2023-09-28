@@ -7,3 +7,7 @@ A collection of bookmarklets to assist with accessibility testing.
 ## image-alt-attribute-checker
 
 [image-alt-attribute-checker](image-alt-attribute-checker/) は画像の代替テキスト（alt属性値）の確認を支援するためのブックマークレットです。
+
+## focusable-element-checker
+
+[focusable-element-checker](focusable-element-checker/) はフォーカス可能な要素の確認を支援するためのブックマークレットです。
