@@ -15,3 +15,7 @@ A collection of bookmarklets to assist with accessibility testing.
 ## show-heading-level
 
 [show-heading-level](show-heading-level/) は、見だし要素のレベルを表示するブックマークレットです。
+
+## non-html-link-highlighter
+
+[non-html-link-highlighter](non-html-link-highlighter/) は、PDFファイルなど、HTMLではないファイルへのリンクを検出し、そのリンク先の拡張子を表示するブックマークレットです。
