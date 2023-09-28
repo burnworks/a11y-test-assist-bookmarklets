@@ -21,7 +21,9 @@ javascript: (() => {
 
             tooltip.style.position = 'absolute';
             tooltip.style.backgroundColor = 'white';
-            tooltip.style.padding = '5px';
+            tooltip.style.padding = '0.25rem 0.5rem';
+            tooltip.style.borderRadius = '0.125rem';
+            tooltip.style.fontSize = '1rem';
             tooltip.style.pointerEvents = 'none';
             tooltip.style.transform = 'translate(-50%, -100%)';
             const scrollX = window.scrollX;
