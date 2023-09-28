@@ -30,11 +30,11 @@ javascript: (() => {
             const scrollY = window.scrollY;
             tooltip.style.top = (e.clientY + scrollY) + 'px';
             tooltip.style.left = (e.clientX + scrollX) + 'px';
-            tooltip.setAttribute('class', 'img-tooltip');
+            tooltip.setAttribute('class', '__img-tooltip');
             document.body.appendChild(tooltip);
         });
         img.addEventListener('mouseleave', () => {
-            const tooltip = document.querySelector('.img-tooltip');
+            const tooltip = document.querySelector('.__img-tooltip');
             if (tooltip) {
                 tooltip.remove();
             }
