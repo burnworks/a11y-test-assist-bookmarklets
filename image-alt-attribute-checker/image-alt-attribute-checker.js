@@ -20,6 +20,7 @@ javascript: (() => {
             }
 
             tooltip.style.position = 'absolute';
+            tooltip.style.zIndex = '9999';
             tooltip.style.backgroundColor = 'white';
             tooltip.style.padding = '0.25rem 0.5rem';
             tooltip.style.borderRadius = '0.125rem';
