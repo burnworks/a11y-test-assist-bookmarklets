@@ -12,7 +12,7 @@
 下記のブックマークレットをブラウザのブックマークツールバーなどに登録してください。チェック対象 Web ページでブックマークレットを実行します。
 
 ```
-javascript:(()=>{const headings=document.querySelectorAll('h1,h2,h3,h4,h5,h6');headings.forEach(heading=>{const label=document.createElement('div');label.innerText=heading.tagName;label.style.position='absolute';label.style.zIndex='9999';label.style.backgroundColor='#B71C1C';label.style.color='white';label.style.padding='0.125rem 0.25rem';label.style.borderRadius='0.125rem';label.style.fontFamily='Arial,sans-serif';label.style.fontSize='0.875rem';label.style.left='0';label.style.top='0';label.style.transform='translateY(-100%)';heading.style.position='relative';heading.appendChild(label);});})();
+javascript:(()=>{const cssId="show-heading-level",cssUrl="https://burnworks.github.io/a11y-test-assist-bookmarklets/show-heading-level.css",existingLink=document.getElementById(cssId);if(existingLink){existingLink.remove()}else{const link=document.createElement("link");link.id=cssId;link.rel="stylesheet";link.type="text/css";link.href=cssUrl;link.media="all";document.head.appendChild(link)}})();
 ```
 
-表示を消したい場合はページを再読み込みします。
+表示を消したい場合はもう一度ブックマークレットを実行します。
