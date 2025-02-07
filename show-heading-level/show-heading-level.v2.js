@@ -1,6 +1,6 @@
 javascript: (() => {
     const cssId = 'show-heading-level';
-    const cssUrl = 'https://burnworks.github.io/a11y-test-assist-bookmarklets/dist/show-heading-level.css';
+    const cssUrl = 'https://burnworks.github.io/a11y-test-assist-bookmarklets/show-heading-level.css';
     const existingLink = document.getElementById(cssId);
     if (existingLink) {
         existingLink.remove();

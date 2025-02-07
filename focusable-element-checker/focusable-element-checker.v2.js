@@ -1,6 +1,6 @@
 javascript: (() => {
     const cssId = 'focusable-element-checker';
-    const cssUrl = 'https://burnworks.github.io/a11y-test-assist-bookmarklets/dist/focusable-element-checker.css';
+    const cssUrl = 'https://burnworks.github.io/a11y-test-assist-bookmarklets/focusable-element-checker.css';
     const existingLink = document.getElementById(cssId);
     if (existingLink) {
         existingLink.remove();

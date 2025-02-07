@@ -1,6 +1,6 @@
 javascript: (() => {
     const cssId = 'non-html-link-highlighter';
-    const cssUrl = 'https://burnworks.github.io/a11y-test-assist-bookmarklets/dist/non-html-link-highlighter.css';
+    const cssUrl = 'https://burnworks.github.io/a11y-test-assist-bookmarklets/non-html-link-highlighter.css';
     const existingLink = document.getElementById(cssId);
     if (existingLink) {
         existingLink.remove();
