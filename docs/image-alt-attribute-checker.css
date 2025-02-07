@@ -1,10 +1,13 @@
-img {
+:has(> img) {
     position: relative !important;
+}
+
+img {
     box-shadow: 0 0 0 2px #fff !important;
     outline: 2px dotted #B71C1C !important;
 }
 
-img:hover::after {
+:has(> img):hover::after {
     position: absolute !important;
     z-index: 99999 !important;
     background-color: white !important;
@@ -12,23 +15,22 @@ img:hover::after {
     border-radius: 0.125rem !important;
     font-size: 1rem !important;
     pointer-events: none !important;
-    transform: translate(-50%, -100%) !important;
     top: 0 !important;
-    left: 50% !important;
+    left: 0 !important;
     white-space: nowrap !important;
 }
 
-img:not([alt]):hover::after {
+:has(> img:not([alt])):hover::after {
     content: "alt属性が省略されています！" !important;
     border: 1px solid #B71C1C !important;
 }
 
-img[alt=""]:hover::after {
+:has(> img[alt=""]):hover::after {
     content: "alt属性値は空です" !important;
     border: 1px solid #B71C1C !important;
 }
 
-img[alt]:not([alt=""]):hover::after {
+:has(> img[alt]:not([alt=""])):hover::after {
     content: attr(alt) !important;
     border: 1px solid black !important;
 }
