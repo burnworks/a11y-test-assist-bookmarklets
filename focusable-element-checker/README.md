@@ -18,7 +18,7 @@
 下記のブックマークレットをブラウザのブックマークツールバーなどに登録してください。チェック対象 Web ページでブックマークレットを実行します。
 
 ```
-javascript:(()=>{const focusableElements=document.querySelectorAll('a[href],area[href],button:not([disabled]),input:not([disabled]):not([type="hidden"]),textarea:not([disabled]),select:not([disabled]),[tabindex]:not([tabindex="-1"])');focusableElements.forEach(elem=>{const existingStyle=elem.getAttribute('style')||'';elem.setAttribute('style',`${existingStyle};outline:2px dotted #B71C1C;`);});})();
+javascript:(()=>{const cssId="focusable-element-checker",cssUrl="https://burnworks.github.io/a11y-test-assist-bookmarklets/focusable-element-checker.css",existingLink=document.getElementById(cssId);if(existingLink){existingLink.remove()}else{const link=document.createElement("link");link.id=cssId;link.rel="stylesheet";link.type="text/css";link.href=cssUrl;link.media="all";document.head.appendChild(link)}})();
 ```
 
-表示を消したい場合はページを再読み込みします。
+表示を消したい場合はもう一度ブックマークレットを実行します。
