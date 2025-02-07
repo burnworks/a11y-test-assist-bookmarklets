@@ -1,10 +1,21 @@
 javascript: (function () {
+    const cssId = "image-alt-attribute-checker";
+    const cssUrl = "https://burnworks.github.io/a11y-test-assist-bookmarklets/image-alt-attribute-checker.css";
+    if (!document.getElementById(cssId)) {
+        const linkElement = document.createElement("link");
+        linkElement.id = cssId;
+        linkElement.rel = "stylesheet";
+        linkElement.href = cssUrl;
+        document.head.appendChild(linkElement);
+    }
+
     // マウスオーバー時の処理（ツールチップ生成）
     function onEnter(e) {
-        var img = e.currentTarget,
-            tooltip = document.createElement("div"),
-            altText = img.alt,
-            hasAlt = img.hasAttribute("alt");
+        const img = e.currentTarget;
+        const tooltip = document.createElement("div");
+        const altText = img.alt;
+        const hasAlt = img.hasAttribute("alt");
+
         if (!hasAlt) {
             tooltip.innerHTML = '<b style="color: #B71C1C;">alt属性が省略されています！</b>';
             tooltip.style.border = "1px solid #B71C1C";
@@ -15,6 +26,7 @@ javascript: (function () {
             tooltip.innerText = altText;
             tooltip.style.border = "1px solid black";
         }
+
         tooltip.style.position = "absolute";
         tooltip.style.zIndex = "9999";
         tooltip.style.backgroundColor = "white";
@@ -28,21 +40,25 @@ javascript: (function () {
         tooltip.className = "__img-tooltip";
         document.body.appendChild(tooltip);
     }
+
     // マウスアウト時の処理（ツールチップ削除）
     function onLeave() {
-        var tooltip = document.querySelector(".__img-tooltip");
-        if (tooltip) { tooltip.remove(); }
+        const tooltip = document.querySelector(".__img-tooltip");
+        if (tooltip) {
+            tooltip.remove();
+        }
     }
-    // すべての img 要素に対して処理を設定
-    var imgs = document.querySelectorAll("img");
-    imgs.forEach(function (img) {
-        img.style.outline = "2px dotted #B71C1C";
+
+    // すべての img 要素に対してイベントリスナーを設定
+    const imgs = document.querySelectorAll("img");
+    imgs.forEach(img => {
         img.addEventListener("mouseenter", onEnter);
         img.addEventListener("mouseleave", onLeave);
     });
+
     // 既にリセットボタンが存在していなければ作成する
     if (!document.getElementById("__img-reset-btn")) {
-        var btn = document.createElement("button");
+        const btn = document.createElement("button");
         btn.textContent = "Reset Image Alt Checker";
         btn.id = "__img-reset-btn";
         btn.style.position = "fixed";
@@ -56,15 +72,21 @@ javascript: (function () {
         btn.style.borderRadius = "0.25rem";
         btn.style.cursor = "pointer";
         document.body.appendChild(btn);
+
         // リセットボタン押下時の処理
         btn.addEventListener("click", function () {
-            imgs.forEach(function (img) {
-                img.style.outline = "";
+            imgs.forEach(img => {
                 img.removeEventListener("mouseenter", onEnter);
                 img.removeEventListener("mouseleave", onLeave);
             });
-            var tooltip = document.querySelector(".__img-tooltip");
-            if (tooltip) { tooltip.remove(); }
+            const tooltip = document.querySelector(".__img-tooltip");
+            if (tooltip) {
+                tooltip.remove();
+            }
+            const cssEl = document.getElementById(cssId);
+            if (cssEl) {
+                cssEl.remove();
+            }
             btn.remove();
         });
     }
