@@ -1,0 +1,22 @@
+th {
+    position: relative !important;
+    box-shadow: 0 0 0 2px #fff !important;
+    outline: 2px dotted #B71C1C !important;
+}
+
+th::before {
+    position: absolute !important;
+    z-index: 99999 !important;
+    background-color: #B71C1C !important;
+    color: white !important;
+    padding: 0.125rem 0.25rem !important;
+    border-radius: 0.125rem !important;
+    font-family: Arial, sans-serif !important;
+    font-size: 0.875rem !important;
+    left: 0 !important;
+    top: 0 !important;
+}
+
+th::before {
+    content: attr(scope);
+}
