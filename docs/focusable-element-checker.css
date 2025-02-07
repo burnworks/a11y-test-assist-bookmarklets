@@ -5,5 +5,6 @@ input:not([disabled]):not([type="hidden"]),
 textarea:not([disabled]),
 select:not([disabled]),
 [tabindex]:not([tabindex="-1"]) {
-    outline: 2px dotted #B71C1C !important;
+    /*outline: 2px dotted #B71C1C !important;*/
+    box-shadow: 0 0 0 2px #fff, 0 0 0 4px #B71C1C !important;
 }
