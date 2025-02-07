@@ -7,6 +7,7 @@ a[href$=".ppt" i],
 a[href$=".pptx" i],
 a[href$=".zip" i] {
     position: relative !important;
+    box-shadow: 0 0 0 2px #fff !important;
     outline: 2px dotted #B71C1C !important;
 }
 
