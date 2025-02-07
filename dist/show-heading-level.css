@@ -1,0 +1,46 @@
+h1, h2, h3, h4, h5, h6 {
+    position: relative !important;
+    outline: 2px solid #B71C1C !important;
+}
+
+h1::before,
+h2::before,
+h3::before,
+h4::before,
+h5::before,
+h6::before {
+    position: absolute !important;
+    z-index: 99999 !important;
+    background-color: #B71C1C !important;
+    color: white !important;
+    padding: 0.125rem 0.25rem !important;
+    border-radius: 0.125rem !important;
+    font-family: Arial, sans-serif !important;
+    font-size: 0.875rem !important;
+    left: 0 !important;
+    top: 0 !important;
+}
+
+h1::before {
+    content: "H1" !important;
+}
+
+h2::before {
+    content: "H2" !important;
+}
+
+h3::before {
+    content: "H3" !important;
+}
+
+h4::before {
+    content: "H4" !important;
+}
+
+h5::before {
+    content: "H5" !important;
+}
+
+h6::before {
+    content: "H6" !important;
+}

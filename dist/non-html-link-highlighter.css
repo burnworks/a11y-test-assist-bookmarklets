@@ -1,0 +1,63 @@
+a[href$=".pdf" i],
+a[href$=".xls" i],
+a[href$=".xlsx" i],
+a[href$=".doc" i],
+a[href$=".docx" i],
+a[href$=".ppt" i],
+a[href$=".pptx" i],
+a[href$=".zip" i] {
+    position: relative !important;
+    outline: 2px dotted #B71C1C !important;
+}
+
+a[href$=".pdf" i]::after,
+a[href$=".xls" i]::after,
+a[href$=".xlsx" i]::after,
+a[href$=".doc" i]::after,
+a[href$=".docx" i]::after,
+a[href$=".ppt" i]::after,
+a[href$=".pptx" i]::after,
+a[href$=".zip" i]::after {
+    position: absolute !important;
+    z-index: 99999 !important;
+    background-color: #B71C1C !important;
+    color: white !important;
+    padding: 0.125rem 0.25rem !important;
+    border-radius: 0.125rem !important;
+    font-family: Arial, sans-serif !important;
+    font-size: 0.875rem !important;
+    left: 0 !important;
+    top: 0 !important;
+}
+
+a[href$=".pdf" i]::after {
+    content: "PDF" !important;
+}
+
+a[href$=".xls" i]::after {
+    content: "XLS" !important;
+}
+
+a[href$=".xlsx" i]::after {
+    content: "XLSX" !important;
+}
+
+a[href$=".doc" i]::after {
+    content: "DOC" !important;
+}
+
+a[href$=".docx" i]::after {
+    content: "DOCX" !important;
+}
+
+a[href$=".ppt" i]::after {
+    content: "PPT" !important;
+}
+
+a[href$=".pptx" i]::after {
+    content: "PPTX" !important;
+}
+
+a[href$=".zip" i]::after {
+    content: "ZIP" !important;
+}
