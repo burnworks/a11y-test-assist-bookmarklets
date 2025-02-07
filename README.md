@@ -20,6 +20,10 @@ A collection of bookmarklets to assist with accessibility testing.
 
 [non-html-link-highlighter](non-html-link-highlighter/) は、PDFファイルなど、HTMLではないファイルへのリンクを検出し、そのリンク先の拡張子を表示するブックマークレットです。
 
+## header-cell-scope-indicator
+
+[header-cell-scope-indicator](header-cell-scope-indicator/) は、見だしセル（th 要素）の scope 属性値を表示するブックマークレットです。
+
 ## force-focus-outline
 
 [force-focus-outline](force-focus-outline/) は、フォーカスインジケータを強制的に表示するためのブックマークレットです。
