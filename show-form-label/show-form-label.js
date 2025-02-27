@@ -1,13 +1,13 @@
 javascript: (() => {
-    // 既存のスタイルシートがあれば削除
-    const existingStylesheet = document.getElementById('show-form-label');
-    if (existingStylesheet) {
-        existingStylesheet.remove();
-    }
-
-    // 既存のラベル表示を削除（再実行時のため）
     const existingLabels = document.querySelectorAll('.show-form-label');
-    existingLabels.forEach(label => label.remove());
+    if (existingLabels.length > 0) {
+        existingLabels.forEach(label => label.remove());
+        const existingStylesheet = document.getElementById('show-form-label');
+        if (existingStylesheet) {
+            existingStylesheet.remove();
+        }
+        return;
+    }
 
     // 外部CSSをユーザースタイルシートとして追加
     const stylesheet = document.createElement('link');
@@ -35,7 +35,6 @@ javascript: (() => {
         // 2. 親要素がlabelの場合をチェック
         if (!hasLabel && input.closest('label')) {
             const parentLabel = input.closest('label');
-            // 入力要素自体のテキストを除外
             const clonedLabel = parentLabel.cloneNode(true);
             const inputsInLabel = clonedLabel.querySelectorAll('input, select, textarea, button');
             inputsInLabel.forEach(el => el.remove());
@@ -60,19 +59,19 @@ javascript: (() => {
             }
         }
 
-        // 5. 一応、placeholder属性をチェック（代替ラベルとして機能することがあるが、WAI-ARIAではラベルと見なされない）
+        // 5. placeholder属性をチェック
         if (!hasLabel && input.placeholder) {
             labelText = `(Placeholder: ${input.placeholder})`;
-            hasLabel = false; // placeholderはラベルとして不十分なので、hasLabelはfalseのまま
+            hasLabel = false;
         }
 
-        // 6. value属性をチェック（ボタン等で使用される場合）
+        // 6. value属性をチェック（ボタン等の場合）
         if (!hasLabel && (input.tagName === 'BUTTON' || input.type === 'button' || input.type === 'submit') && input.value) {
             labelText = input.value;
             hasLabel = true;
         }
 
-        // 7. テキストコンテンツをチェック（ボタン要素）
+        // 7. ボタン要素のテキストコンテンツをチェック
         if (!hasLabel && input.tagName === 'BUTTON' && input.textContent) {
             labelText = input.textContent.trim();
             hasLabel = true;
