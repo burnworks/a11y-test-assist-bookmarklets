@@ -29,3 +29,7 @@ A collection of bookmarklets to assist with accessibility testing.
 [force-focus-outline](force-focus-outline/) は、フォーカスインジケータを強制的に表示するためのブックマークレットです。
 
 Web サイト側で `:focus` に対して `outline: none;` が指定されていてフォーカスが可視化されない場合に、それを強制的に解除します。
+
+## show-form-label
+
+[show-form-label](show-form-label/) は、入力コントロールのラベルを表示するブックマークレットです。
