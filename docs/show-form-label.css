@@ -1,0 +1,17 @@
+.show-form-label {
+    position: absolute;
+    background-color: white;
+    color: #B71C1C;
+    padding: 0.125rem 0.25rem;
+    border-radius: 0.125rem;
+    font-size: 0.875rem;
+    z-index: 99999;
+    max-width: 20em;
+    border: 1px solid #B71C1C;
+    pointer-events: none;
+}
+
+.show-form-label.no-label {
+    background-color: #B71C1C;
+    color: white;
+}
