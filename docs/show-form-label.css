@@ -1,17 +1,21 @@
 .show-form-label {
-    position: absolute;
-    background-color: white;
-    color: #B71C1C;
-    padding: 0.125rem 0.25rem;
-    border-radius: 0.125rem;
-    font-size: 0.875rem;
-    z-index: 99999;
-    max-width: 20em;
-    border: 1px solid #B71C1C;
-    pointer-events: none;
+    all: revert;
+    position: absolute !important;
+    background-color: #fff !important;
+    color: #B71C1C !important;
+    padding: 0.125rem 0.25rem !important;
+    border-radius: 0.125rem !important;
+    font: 400 0.875rem/1.2 system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif !important;
+    z-index: 2147483647 !important;
+    max-width: 20em !important;
+    border: 1px solid #B71C1C !important;
+    pointer-events: none !important;
+    box-sizing: border-box !important;
+    text-transform: none !important;
+    text-shadow: none !important;
 }
 
 .show-form-label.no-label {
-    background-color: #B71C1C;
-    color: white;
+    background-color: #B71C1C !important;
+    color: #fff !important;
 }
