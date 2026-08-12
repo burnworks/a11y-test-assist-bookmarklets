@@ -1,0 +1,16 @@
+{
+  "name": "a11y-test-assist-bookmarklets",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "node scripts/build-bookmarklets.mjs",
+    "check": "npm run build && npm test",
+    "test": "node --test"
+  },
+  "devDependencies": {
+    "esbuild": "^0.25.0",
+    "jsdom": "^26.0.0"
+  }
+}
+
