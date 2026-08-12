@@ -15,6 +15,7 @@ const bookmarklets = [
     'non-html-link-highlighter',
     'show-form-label',
     'show-heading-level',
+    'text-spacing-checker',
 ];
 
 for (const name of bookmarklets) {

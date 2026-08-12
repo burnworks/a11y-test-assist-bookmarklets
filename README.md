@@ -12,6 +12,7 @@
 - [focusable-element-checker](focusable-element-checker/)：Tabキーの移動順と、操作可能に見える非Tab要素を表示
 - [hidden-focusable-checker](hidden-focusable-checker/)：`aria-hidden` 内のフォーカス可能要素を検出
 - [show-heading-level](show-heading-level/)：ネイティブおよびARIA見出しのレベルを表示
+- [text-spacing-checker](text-spacing-checker/)：WCAGの文字間隔を適用して文字切れ候補を表示
 - [non-html-link-highlighter](non-html-link-highlighter/)：HTML以外のファイルへのリンクを表示
 - [header-cell-scope-indicator](header-cell-scope-indicator/)：`th` 要素の `scope` を分類して表示
 - [force-focus-outline](force-focus-outline/)：現在フォーカスされている要素を強調
