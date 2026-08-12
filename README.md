@@ -7,6 +7,7 @@
 - [aria-reference-checker](aria-reference-checker/)：ARIA・HTMLのID参照と重複IDを検査
 - [image-alt-attribute-checker](image-alt-attribute-checker/)：画像の `alt` 属性を分類して表示
 - [live-regions-checker](live-regions-checker/)：ライブリージョンの更新と `ariaNotify()` 呼び出しを記録
+- [landmark-checker](landmark-checker/)：ランドマークの役割・名前・重複を表示
 - [focusable-element-checker](focusable-element-checker/)：Tabキーの移動順と、操作可能に見える非Tab要素を表示
 - [hidden-focusable-checker](hidden-focusable-checker/)：`aria-hidden` 内のフォーカス可能要素を検出
 - [show-heading-level](show-heading-level/)：ネイティブおよびARIA見出しのレベルを表示
