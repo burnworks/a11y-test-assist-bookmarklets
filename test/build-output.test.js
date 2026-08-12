@@ -7,6 +7,7 @@ const bookmarklets = [
     'force-focus-outline',
     'header-cell-scope-indicator',
     'image-alt-attribute-checker',
+    'live-regions-check',
     'non-html-link-highlighter',
     'show-form-label',
     'show-heading-level',
@@ -22,4 +23,3 @@ for (const name of bookmarklets) {
         assert.ok(readme.includes(`\`\`\`text\n${code}\n\`\`\``));
     });
 }
-

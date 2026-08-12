@@ -7,6 +7,7 @@ const bookmarklets = [
     'force-focus-outline',
     'header-cell-scope-indicator',
     'image-alt-attribute-checker',
+    'live-regions-check',
     'non-html-link-highlighter',
     'show-form-label',
     'show-heading-level',

@@ -118,7 +118,7 @@ function makeElement(document, tagName, text) {
     return element;
 }
 
-function createUi(document, id, title, destroy) {
+function createUi(document, id, title, destroy, logTitle) {
     const host = makeElement(document, 'div');
     host.setAttribute(ROOT_ATTRIBUTE, id);
     setStyles(host, {
@@ -137,11 +137,15 @@ function createUi(document, id, title, destroy) {
     const summary = makeElement(document, 'div', '確認中…');
     const detail = makeElement(document, 'div', '枠にマウスを重ねるか、対象へフォーカスすると詳細を表示します。');
     const button = makeElement(document, 'button', '終了');
+    const logHeading = logTitle ? makeElement(document, 'strong', logTitle) : null;
+    const log = logTitle ? makeElement(document, 'ol') : null;
+    const logControls = logTitle ? makeElement(document, 'div') : null;
+    const pauseButton = logTitle ? makeElement(document, 'button', '一時停止') : null;
+    const clearButton = logTitle ? makeElement(document, 'button', 'ログ消去') : null;
 
     overlay.setAttribute('aria-hidden', 'true');
     panel.setAttribute('role', 'region');
     panel.setAttribute('aria-label', title);
-    summary.setAttribute('role', 'status');
     setStyles(overlay, { position: 'fixed', inset: '0', pointerEvents: 'none' });
     setStyles(panel, {
         all: 'initial',
@@ -164,6 +168,23 @@ function createUi(document, id, title, destroy) {
     setStyles(heading, { display: 'block', paddingRight: '60px', fontWeight: '700', fontSize: '15px' });
     setStyles(summary, { marginTop: '6px', fontWeight: '600' });
     setStyles(detail, { marginTop: '8px', overflowWrap: 'anywhere' });
+    if (logHeading && log) {
+        setStyles(logHeading, { display: 'block', marginTop: '12px', paddingTop: '10px', borderTop: '1px solid #d1d5db', fontWeight: '700' });
+        setStyles(logControls, { display: 'flex', gap: '6px', marginTop: '6px' });
+        for (const control of [pauseButton, clearButton]) {
+            setStyles(control, {
+                all: 'revert',
+                padding: '3px 7px',
+                border: '1px solid #6b7280',
+                borderRadius: '4px',
+                background: '#f9fafb',
+                color: '#111827',
+                font: '600 12px/1.4 system-ui, sans-serif',
+                cursor: 'pointer',
+            });
+        }
+        setStyles(log, { margin: '6px 0 0', paddingLeft: '24px' });
+    }
     setStyles(button, {
         all: 'revert',
         position: 'absolute',
@@ -179,9 +200,13 @@ function createUi(document, id, title, destroy) {
     });
     button.addEventListener('click', destroy);
     panel.append(heading, summary, detail, button);
+    if (logHeading && log) {
+        logControls.append(pauseButton, clearButton);
+        panel.append(logHeading, logControls, log);
+    }
     shadow.append(overlay, panel);
     (document.body || document.documentElement).append(host);
-    return { host, overlay, panel, summary, detail };
+    return { host, overlay, panel, summary, detail, log, pauseButton, clearButton };
 }
 
 function createMarker(document, result, select) {
@@ -231,6 +256,8 @@ export function startInspector(config) {
     let observers = [];
     let listeningDocuments = [];
     let resultByElement = new WeakMap();
+    let paused = false;
+    const extraCleanups = [];
     let ui;
 
     const destroy = () => {
@@ -238,6 +265,9 @@ export function startInspector(config) {
         destroyed = true;
         observers.forEach(observer => observer.disconnect());
         observers = [];
+        extraCleanups.splice(0).reverse().forEach(cleanup => {
+            try { cleanup(); } catch { /* Best-effort cleanup for page-owned objects. */ }
+        });
         for (const currentDocument of listeningDocuments) {
             currentDocument.removeEventListener('pointerover', selectFromEvent, true);
             currentDocument.removeEventListener('focusin', selectFromEvent, true);
@@ -251,7 +281,36 @@ export function startInspector(config) {
         delete topWindow[stateKey];
     };
 
-    ui = createUi(topDocument, config.id, config.title, destroy);
+    ui = createUi(topDocument, config.id, config.title, destroy, config.logTitle);
+
+    const addCleanup = cleanup => {
+        if (typeof cleanup === 'function') extraCleanups.push(cleanup);
+    };
+
+    const report = entry => {
+        if (!ui.log || destroyed || paused) return;
+        const item = makeElement(topDocument, 'li');
+        const time = new Date().toLocaleTimeString([], { hour12: false });
+        item.textContent = `${time} ${entry.kind ? `[${entry.kind}] ` : ''}${entry.message}`;
+        setStyles(item, { marginTop: '5px', color: COLORS[entry.severity] || '#111827', overflowWrap: 'anywhere' });
+        if (entry.detail) item.title = entry.detail;
+        ui.log.prepend(item);
+        while (ui.log.children.length > (config.logLimit || 100)) ui.log.lastElementChild.remove();
+        ui.detail.textContent = entry.detail || entry.message;
+    };
+
+    if (ui.pauseButton) {
+        ui.pauseButton.setAttribute('aria-pressed', 'false');
+        ui.pauseButton.addEventListener('click', () => {
+            paused = !paused;
+            ui.pauseButton.setAttribute('aria-pressed', String(paused));
+            ui.pauseButton.textContent = paused ? '再開' : '一時停止';
+        });
+    }
+    ui.clearButton?.addEventListener('click', () => {
+        ui.log.replaceChildren();
+        ui.detail.textContent = 'ログを消去しました。';
+    });
 
     const showDetail = result => {
         if (!result) return;
@@ -309,11 +368,22 @@ export function startInspector(config) {
             currentDocument.defaultView?.addEventListener('scroll', scheduleDraw, true);
             currentDocument.defaultView?.addEventListener('resize', scheduleDraw, true);
             for (const root of getRoots(currentDocument)) {
-                const observer = new currentDocument.defaultView.MutationObserver(scheduleScan);
-                observer.observe(root, { subtree: true, childList: true, attributes: true, characterData: true });
+                const observer = new currentDocument.defaultView.MutationObserver(records => {
+                    config.onMutations?.(records, report);
+                    scheduleScan();
+                });
+                observer.observe(root, {
+                    subtree: true,
+                    childList: true,
+                    attributes: true,
+                    attributeOldValue: true,
+                    characterData: true,
+                    characterDataOldValue: true,
+                });
                 observers.push(observer);
             }
         }
+        config.onDocuments?.(documentList, report, addCleanup);
     }
 
     function scan() {
@@ -321,7 +391,7 @@ export function startInspector(config) {
         if (destroyed) return;
         const context = getSameOriginDocuments(topDocument);
         try {
-            results = config.scan(context.documents).filter(result => result?.element);
+            results = config.scan(context.documents, { report }).filter(result => result?.element);
         } catch (error) {
             results = [];
             resultByElement = new WeakMap();
@@ -344,7 +414,7 @@ export function startInspector(config) {
         topWindow.requestAnimationFrame(scan);
     }
 
-    const controller = { destroy, refresh: scheduleScan };
+    const controller = { destroy, refresh: scheduleScan, report };
     topWindow[stateKey] = controller;
     scan();
     return controller;

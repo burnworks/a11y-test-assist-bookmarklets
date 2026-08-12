@@ -37,6 +37,7 @@ test('inspector follows DOM changes and a second execution removes all UI', asyn
     const config = {
         id: 'lifecycle-test',
         title: 'Lifecycle test',
+        logTitle: 'Log',
         scan: documents => documents.flatMap(current => [...current.querySelectorAll('button')].map(element => ({
             element, label: element.id, severity: 'info', detail: element.textContent,
         }))),
@@ -48,6 +49,13 @@ test('inspector follows DOM changes and a second execution removes all UI', asyn
         assert.ok(controller);
         assert.equal(host.shadowRoot.querySelector('[data-a11y-marker]').parentElement.getAttribute('aria-hidden'), 'true');
         assert.equal(host.shadowRoot.querySelector('[role="region"]').getAttribute('aria-label'), 'Lifecycle test');
+        assert.equal(host.shadowRoot.querySelector('[role="status"]'), null);
+        controller.report({ kind: 'test', message: 'First log' });
+        assert.equal(host.shadowRoot.querySelectorAll('ol li').length, 1);
+        host.shadowRoot.querySelector('button[aria-pressed]').click();
+        controller.report({ kind: 'test', message: 'Paused log' });
+        assert.equal(host.shadowRoot.querySelectorAll('ol li').length, 1);
+        host.shadowRoot.querySelector('button[aria-pressed]').click();
         assert.equal(host.shadowRoot.querySelectorAll('[data-a11y-marker]').length, 1);
         assert.equal(document.querySelector('#first').getAttribute('style'), 'position:absolute');
 
