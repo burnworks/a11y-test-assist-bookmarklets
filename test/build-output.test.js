@@ -3,6 +3,7 @@ import assert from 'node:assert/strict';
 import { readFile } from 'node:fs/promises';
 
 const bookmarklets = [
+    'aria-reference-checker',
     'focusable-element-checker',
     'force-focus-outline',
     'header-cell-scope-indicator',

@@ -3,6 +3,7 @@ import { readFile, writeFile } from 'node:fs/promises';
 import path from 'node:path';
 
 const bookmarklets = [
+    'aria-reference-checker',
     'focusable-element-checker',
     'force-focus-outline',
     'header-cell-scope-indicator',
@@ -34,7 +35,10 @@ for (const name of bookmarklets) {
         throw new Error(`${readmePath} is missing bookmarklet markers`);
     }
     const block = `${startMarker}\n\n\`\`\`text\n${bookmarklet}\n\`\`\`\n\n${endMarker}`;
-    const nextReadme = readme.replace(new RegExp(`${startMarker}[\\s\\S]*?${endMarker}`), block);
+    const nextReadme = readme.replace(
+        new RegExp(`${startMarker}[\\s\\S]*?${endMarker}`),
+        () => block,
+    );
     await writeFile(readmePath, `${nextReadme.trimEnd()}\n`, 'utf8');
     console.log(`built ${outputPath}`);
 }

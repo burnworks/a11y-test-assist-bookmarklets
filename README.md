@@ -4,6 +4,7 @@
 
 ## ブックマークレット
 
+- [aria-reference-checker](aria-reference-checker/)：ARIA・HTMLのID参照と重複IDを検査
 - [image-alt-attribute-checker](image-alt-attribute-checker/)：画像の `alt` 属性を分類して表示
 - [live-regions-checker](live-regions-checker/)：ライブリージョンの更新と `ariaNotify()` 呼び出しを記録
 - [focusable-element-checker](focusable-element-checker/)：Tabキーの移動順と、操作可能に見える非Tab要素を表示
