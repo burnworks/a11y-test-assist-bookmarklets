@@ -68,12 +68,45 @@
         <div id="dynamic"></div>
         <div id="shadow-host"></div>
     </section>
+
+    <section>
+        <h2>ライブリージョンとariaNotify</h2>
+        <p id="polite-region" aria-live="polite"></p>
+        <p id="status-region" role="status"></p>
+        <div id="alert-region" role="alert"></div>
+        <button id="update-polite">politeを更新</button>
+        <button id="update-status">statusを更新</button>
+        <button id="update-alert">alertを更新</button>
+        <button id="notify-normal">ariaNotify normal</button>
+        <button id="notify-high">ariaNotify high</button>
+    </section>
     <script>
         document.querySelector('#add-image').addEventListener('click', () => {
             document.querySelector('#dynamic').append(document.createElement('img'));
         });
         const shadow = document.querySelector('#shadow-host').attachShadow({ mode: 'open' });
         shadow.innerHTML = '<button aria-label="Shadow DOMのボタン">Shadow button</button>';
+
+        if (typeof Document.prototype.ariaNotify !== 'function') {
+            Document.prototype.ariaNotify = function (announcement, options = {}) {
+                console.log('ariaNotify fallback', announcement, options);
+            };
+        }
+        document.querySelector('#update-polite').addEventListener('click', () => {
+            document.querySelector('#polite-region').textContent = `polite update ${Date.now()}`;
+        });
+        document.querySelector('#update-status').addEventListener('click', () => {
+            document.querySelector('#status-region').textContent = `status update ${Date.now()}`;
+        });
+        document.querySelector('#update-alert').addEventListener('click', () => {
+            document.querySelector('#alert-region').textContent = `alert update ${Date.now()}`;
+        });
+        document.querySelector('#notify-normal').addEventListener('click', () => {
+            document.ariaNotify('Normal priority notification');
+        });
+        document.querySelector('#notify-high').addEventListener('click', () => {
+            document.ariaNotify('High priority notification', { priority: 'high' });
+        });
     </script>
 </body>
 </html>
