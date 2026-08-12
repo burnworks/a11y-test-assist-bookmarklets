@@ -118,7 +118,7 @@ function makeElement(document, tagName, text) {
     return element;
 }
 
-function createUi(document, id, title, destroy, logTitle) {
+function createUi(document, id, title, destroy, logTitle, views = []) {
     const host = makeElement(document, 'div');
     host.setAttribute(ROOT_ATTRIBUTE, id);
     setStyles(host, {
@@ -142,6 +142,8 @@ function createUi(document, id, title, destroy, logTitle) {
     const logControls = logTitle ? makeElement(document, 'div') : null;
     const pauseButton = logTitle ? makeElement(document, 'button', '一時停止') : null;
     const clearButton = logTitle ? makeElement(document, 'button', 'ログ消去') : null;
+    const viewLabel = views.length ? makeElement(document, 'label', '表示: ') : null;
+    const viewSelect = views.length ? makeElement(document, 'select') : null;
 
     overlay.setAttribute('aria-hidden', 'true');
     panel.setAttribute('role', 'region');
@@ -168,6 +170,16 @@ function createUi(document, id, title, destroy, logTitle) {
     setStyles(heading, { display: 'block', paddingRight: '60px', fontWeight: '700', fontSize: '15px' });
     setStyles(summary, { marginTop: '6px', fontWeight: '600' });
     setStyles(detail, { marginTop: '8px', overflowWrap: 'anywhere' });
+    if (viewLabel && viewSelect) {
+        for (const view of views) {
+            const option = makeElement(document, 'option', view.label);
+            option.value = view.id;
+            viewSelect.append(option);
+        }
+        setStyles(viewLabel, { display: 'block', marginTop: '8px', fontWeight: '600' });
+        setStyles(viewSelect, { all: 'revert', marginLeft: '4px', font: '13px/1.4 system-ui, sans-serif' });
+        viewLabel.append(viewSelect);
+    }
     if (logHeading && log) {
         setStyles(logHeading, { display: 'block', marginTop: '12px', paddingTop: '10px', borderTop: '1px solid #d1d5db', fontWeight: '700' });
         setStyles(logControls, { display: 'flex', gap: '6px', marginTop: '6px' });
@@ -199,14 +211,16 @@ function createUi(document, id, title, destroy, logTitle) {
         cursor: 'pointer',
     });
     button.addEventListener('click', destroy);
-    panel.append(heading, summary, detail, button);
+    panel.append(heading, summary);
+    if (viewLabel) panel.append(viewLabel);
+    panel.append(detail, button);
     if (logHeading && log) {
         logControls.append(pauseButton, clearButton);
         panel.append(logHeading, logControls, log);
     }
     shadow.append(overlay, panel);
     (document.body || document.documentElement).append(host);
-    return { host, overlay, panel, summary, detail, log, pauseButton, clearButton };
+    return { host, overlay, panel, summary, detail, log, pauseButton, clearButton, viewSelect };
 }
 
 function createMarker(document, result, select) {
@@ -252,6 +266,7 @@ export function startInspector(config) {
     let destroyed = false;
     let scheduled = false;
     let results = [];
+    let allResults = [];
     let markers = [];
     let observers = [];
     let listeningDocuments = [];
@@ -281,7 +296,16 @@ export function startInspector(config) {
         delete topWindow[stateKey];
     };
 
-    ui = createUi(topDocument, config.id, config.title, destroy, config.logTitle);
+    const views = config.views || [];
+    let activeView = config.initialView || views[0]?.id || '';
+    ui = createUi(topDocument, config.id, config.title, destroy, config.logTitle, views);
+    if (ui.viewSelect) {
+        ui.viewSelect.value = activeView;
+        ui.viewSelect.addEventListener('change', () => {
+            activeView = ui.viewSelect.value;
+            scheduleScan();
+        });
+    }
 
     const addCleanup = cleanup => {
         if (typeof cleanup === 'function') extraCleanups.push(cleanup);
@@ -391,9 +415,12 @@ export function startInspector(config) {
         if (destroyed) return;
         const context = getSameOriginDocuments(topDocument);
         try {
-            results = config.scan(context.documents, { report }).filter(result => result?.element);
+            allResults = config.scan(context.documents, { report }).filter(result => result?.element);
+            const view = views.find(candidate => candidate.id === activeView);
+            results = view?.filter ? allResults.filter(view.filter) : allResults;
         } catch (error) {
             results = [];
+            allResults = [];
             resultByElement = new WeakMap();
             ui.summary.textContent = `検査中にエラーが発生しました: ${error instanceof Error ? error.message : String(error)}`;
             attach(context.documents);
@@ -403,7 +430,8 @@ export function startInspector(config) {
         resultByElement = new WeakMap(results.map(result => [result.element, result]));
         const counts = results.reduce((map, result) => map.set(result.severity, (map.get(result.severity) || 0) + 1), new Map());
         const countText = [...counts].map(([severity, count]) => `${SEVERITY_LABELS[severity] || severity}: ${count}`).join(' / ');
-        ui.summary.textContent = `${results.length}件${countText ? `（${countText}）` : ''}${context.inaccessibleFrames.length ? `・検査不能iframe ${context.inaccessibleFrames.length}件` : ''}`;
+        const totalText = views.length ? `${results.length}/${allResults.length}件` : `${results.length}件`;
+        ui.summary.textContent = `${totalText}${countText ? `（${countText}）` : ''}${context.inaccessibleFrames.length ? `・検査不能iframe ${context.inaccessibleFrames.length}件` : ''}`;
         attach(context.documents);
         draw();
     }

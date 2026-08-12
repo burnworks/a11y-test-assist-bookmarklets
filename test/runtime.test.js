@@ -75,3 +75,39 @@ test('inspector follows DOM changes and a second execution removes all UI', asyn
         dom.window.close();
     }
 });
+
+test('inspector result views filter markers and show the filtered and total counts', async () => {
+    const dom = new JSDOM('<button id="good">Good</button><button id="bad">Bad</button>', { pretendToBeVisual: true });
+    const previousWindow = globalThis.window;
+    const previousDocument = globalThis.document;
+    globalThis.window = dom.window;
+    globalThis.document = dom.window.document;
+    for (const element of document.querySelectorAll('button')) {
+        element.getBoundingClientRect = () => ({ left: 0, top: 0, right: 20, bottom: 20, width: 20, height: 20 });
+    }
+    const config = {
+        id: 'views-test', title: 'Views test',
+        scan: documents => [...documents[0].querySelectorAll('button')].map(element => ({
+            element, label: element.id, severity: element.id === 'bad' ? 'error' : 'success',
+        })),
+        views: [
+            { id: 'problems', label: 'Problems', filter: result => result.severity !== 'success' },
+            { id: 'all', label: 'All' },
+        ],
+    };
+    try {
+        startInspector(config);
+        const root = document.querySelector('[data-a11y-test-assist-root="views-test"]').shadowRoot;
+        assert.equal(root.querySelectorAll('[data-a11y-marker]').length, 1);
+        assert.match(root.querySelector('section div').textContent, /1\/2件/);
+        const select = root.querySelector('select');
+        select.value = 'all';
+        select.dispatchEvent(new dom.window.Event('change'));
+        await new Promise(resolve => dom.window.setTimeout(resolve, 30));
+        assert.equal(root.querySelectorAll('[data-a11y-marker]').length, 2);
+    } finally {
+        window['__a11yTestAssistBookmarklet__views-test']?.destroy();
+        globalThis.window = previousWindow;
+        globalThis.document = previousDocument;
+    }
+});
