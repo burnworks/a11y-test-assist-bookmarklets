@@ -12,6 +12,7 @@ const bookmarklets = [
     'image-alt-attribute-checker',
     'interactive-name-checker',
     'landmark-checker',
+    'language-checker',
     'live-regions-checker',
     'non-html-link-highlighter',
     'show-heading-level',

@@ -132,6 +132,14 @@
         <button class="spaced-target">C</button>
         <p>文章中の<a href="#target">小さい行内リンク</a>も確認します。</p>
     </section>
+
+    <section aria-labelledby="language-heading">
+        <h2 id="language-heading">言語指定</h2>
+        <p lang="en">This paragraph is written in English.</p>
+        <p lang="ja_JP">不正な言語タグの候補です。</p>
+        <p lang="fr" xml:lang="de">Bonjour（langとxml:langが矛盾）</p>
+        <p lang="">空の言語指定です。</p>
+    </section>
     <script>
         document.querySelector('#add-image').addEventListener('click', () => {
             document.querySelector('#dynamic').append(document.createElement('img'));
