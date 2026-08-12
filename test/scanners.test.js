@@ -5,7 +5,7 @@ import { accessibleNameInfo, extensionFromLink } from '../src/bookmarks-shared.j
 import { scanFocusable } from '../src/bookmarklets/focusable-element-checker.js';
 import { scanHeaderCells } from '../src/bookmarklets/header-cell-scope-indicator.js';
 import { scanImageAlternatives } from '../src/bookmarklets/image-alt-attribute-checker.js';
-import { scanNonHtmlLinks } from '../src/bookmarklets/non-html-link-highlighter.js';
+import { scanLinkPurposes } from '../src/bookmarklets/link-purpose-checker.js';
 import { scanInteractiveNames } from '../src/bookmarklets/interactive-name-checker.js';
 import { scanHeadings } from '../src/bookmarklets/show-heading-level.js';
 
@@ -113,15 +113,15 @@ test('scope checker treats a missing scope as informational and invalid values a
     assert.equal(results.invalid.severity, 'error');
 });
 
-test('non-HTML link checker uses the URL pathname and supports query strings', () => {
+test('link purpose checker keeps file detection based on URL pathname', () => {
     const document = fixture(`
         <a id="pdf" href="/report.PDF?download=1#page=2">Report</a>
         <a id="sheet" href="/data.csv?v=3">Data</a>
         <a id="html" href="/article.html?file=.pdf">Article</a>
     `);
-    const results = byId(scanNonHtmlLinks([document]));
+    const results = byId(scanLinkPurposes([document]));
     assert.equal(results.pdf.label, 'PDF');
     assert.equal(results.sheet.label, 'CSV');
-    assert.equal(results.html, undefined);
+    assert.equal(results.html.isFile, false);
     assert.equal(extensionFromLink(document.querySelector('#pdf')), 'pdf');
 });
