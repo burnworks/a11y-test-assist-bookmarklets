@@ -6,7 +6,7 @@ import { scanFocusable } from '../src/bookmarklets/focusable-element-checker.js'
 import { scanHeaderCells } from '../src/bookmarklets/header-cell-scope-indicator.js';
 import { scanImageAlternatives } from '../src/bookmarklets/image-alt-attribute-checker.js';
 import { scanNonHtmlLinks } from '../src/bookmarklets/non-html-link-highlighter.js';
-import { scanFormLabels } from '../src/bookmarklets/show-form-label.js';
+import { scanInteractiveNames } from '../src/bookmarklets/interactive-name-checker.js';
 import { scanHeadings } from '../src/bookmarklets/show-heading-level.js';
 
 function fixture(html, url = 'https://example.com/page') {
@@ -43,7 +43,7 @@ test('form checker distinguishes good names, fallback names, and missing names',
         <input id="default-submit" type="submit">
         <input type="hidden" id="hidden">
     `);
-    const results = byId(scanFormLabels([document]));
+    const results = byId(scanInteractiveNames([document]));
     assert.equal(results.named.severity, 'success');
     assert.equal(results.fallback.severity, 'warning');
     assert.equal(results.missing.severity, 'error');

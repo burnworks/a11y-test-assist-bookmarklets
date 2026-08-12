@@ -35,9 +35,17 @@ export function accessibleNameInfo(element) {
     const labelText = normalizeText(labels.map(contentText).join(' '));
     if (labelText) return { name: labelText, source: labels.length > 1 ? '複数のlabel' : 'label' };
 
-    if (element.localName === 'button' || element.getAttribute('role') === 'button') {
+    const contentNameElements = ['a', 'button', 'summary'];
+    const contentNameRoles = ['button', 'link', 'checkbox', 'menuitem', 'menuitemcheckbox', 'menuitemradio', 'option', 'radio', 'switch', 'tab', 'treeitem'];
+    const role = (element.getAttribute('role') || '').toLowerCase().split(/\s+/)[0];
+    if (contentNameElements.includes(element.localName) || contentNameRoles.includes(role)) {
         const name = contentText(element);
         if (name) return { name, source: '内容テキスト' };
+    }
+
+    if (element.localName === 'area') {
+        const name = normalizeText(element.getAttribute('alt'));
+        if (name) return { name, source: 'alt' };
     }
 
     if (element.localName === 'input') {

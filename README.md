@@ -7,6 +7,7 @@
 - [aria-reference-checker](aria-reference-checker/)：ARIA・HTMLのID参照と重複IDを検査
 - [dialog-focus-checker](dialog-focus-checker/)：ダイアログの名前・モーダル状態・フォーカスを検査
 - [image-alt-attribute-checker](image-alt-attribute-checker/)：画像の `alt` 属性を分類して表示
+- [interactive-name-checker](interactive-name-checker/)：操作要素のアクセシブルな名前と取得元を検査
 - [live-regions-checker](live-regions-checker/)：ライブリージョンの更新と `ariaNotify()` 呼び出しを記録
 - [landmark-checker](landmark-checker/)：ランドマークの役割・名前・重複を表示
 - [focusable-element-checker](focusable-element-checker/)：Tabキーの移動順と、操作可能に見える非Tab要素を表示
@@ -17,7 +18,6 @@
 - [non-html-link-highlighter](non-html-link-highlighter/)：HTML以外のファイルへのリンクを表示
 - [header-cell-scope-indicator](header-cell-scope-indicator/)：`th` 要素の `scope` を分類して表示
 - [force-focus-outline](force-focus-outline/)：現在フォーカスされている要素を強調
-- [show-form-label](show-form-label/)：フォームコントロールの名前と取得元を表示
 
 ## 共通仕様
 
