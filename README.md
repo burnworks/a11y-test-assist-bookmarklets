@@ -8,6 +8,7 @@
 - [image-alt-attribute-checker](image-alt-attribute-checker/)：画像の `alt` 属性を分類して表示
 - [live-regions-checker](live-regions-checker/)：ライブリージョンの更新と `ariaNotify()` 呼び出しを記録
 - [focusable-element-checker](focusable-element-checker/)：Tabキーの移動順と、操作可能に見える非Tab要素を表示
+- [hidden-focusable-checker](hidden-focusable-checker/)：`aria-hidden` 内のフォーカス可能要素を検出
 - [show-heading-level](show-heading-level/)：ネイティブおよびARIA見出しのレベルを表示
 - [non-html-link-highlighter](non-html-link-highlighter/)：HTML以外のファイルへのリンクを表示
 - [header-cell-scope-indicator](header-cell-scope-indicator/)：`th` 要素の `scope` を分類して表示

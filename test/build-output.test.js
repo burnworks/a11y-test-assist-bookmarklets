@@ -5,6 +5,7 @@ import { readFile } from 'node:fs/promises';
 const bookmarklets = [
     'aria-reference-checker',
     'focusable-element-checker',
+    'hidden-focusable-checker',
     'force-focus-outline',
     'header-cell-scope-indicator',
     'image-alt-attribute-checker',
