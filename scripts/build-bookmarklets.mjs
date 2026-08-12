@@ -4,6 +4,7 @@ import path from 'node:path';
 
 const bookmarklets = [
     'aria-reference-checker',
+    'dialog-focus-checker',
     'focusable-element-checker',
     'hidden-focusable-checker',
     'force-focus-outline',
