@@ -16,6 +16,7 @@ const bookmarklets = [
     'show-form-label',
     'show-heading-level',
     'text-spacing-checker',
+    'target-size-checker',
 ];
 
 for (const name of bookmarklets) {
