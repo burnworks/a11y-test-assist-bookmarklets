@@ -1,3 +1,4 @@
+/* Legacy stylesheet retained for previously installed bookmarklets. */
 .show-form-label {
     all: revert;
     position: absolute !important;

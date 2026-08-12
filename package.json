@@ -6,6 +6,7 @@
   "scripts": {
     "build": "node scripts/build-bookmarklets.mjs",
     "check": "npm run build && npm test",
+    "serve:test": "node scripts/serve-test-page.mjs",
     "test": "node --test"
   },
   "devDependencies": {
@@ -13,4 +14,3 @@
     "jsdom": "^26.0.0"
   }
 }
-

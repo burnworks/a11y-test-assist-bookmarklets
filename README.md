@@ -1,35 +1,46 @@
 # A11y Test Assist Bookmarklets
 
-A collection of bookmarklets to assist with accessibility testing.
+アクセシビリティ試験で、目視だけでは確認しにくい情報を可視化するブックマークレット集です。結果は自動的な合否判定ではなく、確認対象を見つけるための補助情報として利用してください。
 
-アクセシビリティ試験の際に補助的に使えるブックマークレット集です。
+## ブックマークレット
 
-## image-alt-attribute-checker
+- [image-alt-attribute-checker](image-alt-attribute-checker/)：画像の `alt` 属性を分類して表示
+- [focusable-element-checker](focusable-element-checker/)：Tabキーの移動順と、操作可能に見える非Tab要素を表示
+- [show-heading-level](show-heading-level/)：ネイティブおよびARIA見出しのレベルを表示
+- [non-html-link-highlighter](non-html-link-highlighter/)：HTML以外のファイルへのリンクを表示
+- [header-cell-scope-indicator](header-cell-scope-indicator/)：`th` 要素の `scope` を分類して表示
+- [force-focus-outline](force-focus-outline/)：現在フォーカスされている要素を強調
+- [show-form-label](show-form-label/)：フォームコントロールの名前と取得元を表示
 
-[image-alt-attribute-checker](image-alt-attribute-checker/) は、画像の代替テキスト（alt属性値）の確認を支援するためのブックマークレットです。
+## 共通仕様
 
-## focusable-element-checker
+- ページ上の対象要素を直接変更せず、独立したオーバーレイで囲みます。
+- 右上のパネルに検出件数と選択中の詳細を表示します。
+- DOMの追加・削除、属性変更、スクロール、リサイズへ追従します。
+- open Shadow DOMと同一生成元iframeを検査します。
+- もう一度実行するか、パネルの「終了」を押すと追加したDOM、監視、イベントを削除します。
 
-[focusable-element-checker](focusable-element-checker/) は、フォーカス可能な要素の確認を支援するためのブックマークレットです。
+cross-origin iframeとclosed Shadow DOMの内部はブラウザのセキュリティ境界により検査できません。cross-origin iframeを検出した場合はパネルに件数を表示します。
 
-## show-heading-level
+## 開発
 
-[show-heading-level](show-heading-level/) は、見だし要素のレベルを表示するブックマークレットです。
+Node.jsを用意し、依存関係をインストールします。
 
-## non-html-link-highlighter
+```sh
+npm install
+```
 
-[non-html-link-highlighter](non-html-link-highlighter/) は、PDFファイルなど、HTMLではないファイルへのリンクを検出し、そのリンク先の拡張子を表示するブックマークレットです。
+`src/bookmarklets/` が読みやすいソース、各ツールのディレクトリにある同名 `.js` が配布用の自己完結ファイルです。次のコマンドで配布ファイルと各READMEのコードを再生成します。
 
-## header-cell-scope-indicator
+`docs/` のCSSは旧版をすでに登録している利用者との互換性のためだけに残しています。新しい配布ファイルからは読み込みません。
 
-[header-cell-scope-indicator](header-cell-scope-indicator/) は、見だしセル（th 要素）の scope 属性値を表示するブックマークレットです。
+```sh
+npm run build
+npm test
+```
 
-## force-focus-outline
+手動確認用ページは次のコマンドで `http://127.0.0.1:4173/` に起動できます。
 
-[force-focus-outline](force-focus-outline/) は、フォーカスインジケータを強制的に表示するためのブックマークレットです。
-
-Web サイト側で `:focus` に対して `outline: none;` が指定されていてフォーカスが可視化されない場合に、それを強制的に解除します。
-
-## show-form-label
-
-[show-form-label](show-form-label/) は、入力コントロールのラベルを表示するブックマークレットです。
+```sh
+npm run serve:test
+```

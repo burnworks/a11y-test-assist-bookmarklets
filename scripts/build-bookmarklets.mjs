@@ -1,5 +1,5 @@
 import { build } from 'esbuild';
-import { writeFile } from 'node:fs/promises';
+import { readFile, writeFile } from 'node:fs/promises';
 import path from 'node:path';
 
 const bookmarklets = [
@@ -23,7 +23,17 @@ for (const name of bookmarklets) {
     });
     const code = result.outputFiles[0].text.trim();
     const outputPath = path.join(name, `${name}.js`);
-    await writeFile(outputPath, `javascript:${code}\n`, 'utf8');
+    const bookmarklet = `javascript:${code}`;
+    await writeFile(outputPath, `${bookmarklet}\n`, 'utf8');
+    const readmePath = path.join(name, 'README.md');
+    const readme = await readFile(readmePath, 'utf8');
+    const startMarker = '<!-- bookmarklet:start -->';
+    const endMarker = '<!-- bookmarklet:end -->';
+    if (!readme.includes(startMarker) || !readme.includes(endMarker)) {
+        throw new Error(`${readmePath} is missing bookmarklet markers`);
+    }
+    const block = `${startMarker}\n\n\`\`\`text\n${bookmarklet}\n\`\`\`\n\n${endMarker}`;
+    const nextReadme = readme.replace(new RegExp(`${startMarker}[\\s\\S]*?${endMarker}`), block);
+    await writeFile(readmePath, `${nextReadme.trimEnd()}\n`, 'utf8');
     console.log(`built ${outputPath}`);
 }
-

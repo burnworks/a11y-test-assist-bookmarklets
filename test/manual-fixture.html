@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="ja">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>ブックマークレット手動確認ページ</title>
+    <style>
+        body { max-width: 70rem; margin: auto; padding: 2rem; font-family: system-ui, sans-serif; }
+        section { margin-block: 3rem; }
+        h2::before { content: "ページ側の疑似要素 "; color: rebeccapurple; }
+        a::after { content: " ↗"; }
+        img { width: 120px; height: 80px; background: #ddd; }
+        table { border-collapse: collapse; }
+        th, td { border: 1px solid; padding: .5rem; }
+        .mouse-only { display: inline-block; padding: .5rem; background: #ddd; cursor: pointer; }
+    </style>
+</head>
+<body>
+    <h1>ブックマークレット手動確認ページ</h1>
+    <p>各ブックマークレットを2回実行し、表示とイベントが残らないことも確認します。</p>
+
+    <section>
+        <h2>フォーカス</h2>
+        <a href="#target">通常リンク</a>
+        <button tabindex="2">正のtabindex</button>
+        <div class="mouse-only" role="button" onclick="this.textContent='clicked'">マウス専用ボタン</div>
+        <label><input type="radio" name="choice"> A</label>
+        <label><input type="radio" name="choice" checked> B</label>
+    </section>
+
+    <section>
+        <h2>画像</h2>
+        <img alt="適切な代替テキスト">
+        <img alt="">
+        <img>
+        <a href="#target"><img alt=""></a>
+    </section>
+
+    <section>
+        <h2>フォーム</h2>
+        <label for="email">メールアドレス</label><input id="email">
+        <input placeholder="placeholderのみ">
+        <input>
+        <button><img alt="保存"></button>
+    </section>
+
+    <section>
+        <h2>表</h2>
+        <table><tr><th scope="col">正常</th><th>省略</th><th scope="sideways">不正</th></tr><tr><td>A</td><td>B</td><td>C</td></tr></table>
+    </section>
+
+    <section>
+        <h4>レベルを飛ばした見出し</h4>
+        <div role="heading" aria-level="5">ARIA見出し</div>
+        <h3 role="presentation">セマンティクスを除去した見出し</h3>
+    </section>
+
+    <section id="target">
+        <h2>ファイルリンク</h2>
+        <a href="report.PDF?download=1#page=2">報告書</a>
+        <a href="data.csv?v=2">データ</a>
+        <a href="article.html?file=.pdf">通常のHTML</a>
+    </section>
+
+    <section>
+        <h2>動的追加とShadow DOM</h2>
+        <button id="add-image">altなし画像を追加</button>
+        <div id="dynamic"></div>
+        <div id="shadow-host"></div>
+    </section>
+    <script>
+        document.querySelector('#add-image').addEventListener('click', () => {
+            document.querySelector('#dynamic').append(document.createElement('img'));
+        });
+        const shadow = document.querySelector('#shadow-host').attachShadow({ mode: 'open' });
+        shadow.innerHTML = '<button aria-label="Shadow DOMのボタン">Shadow button</button>';
+    </script>
+</body>
+</html>

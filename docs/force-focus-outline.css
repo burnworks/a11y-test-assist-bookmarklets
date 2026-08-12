@@ -1,3 +1,4 @@
+/* Legacy stylesheet retained for previously installed bookmarklets. */
 *:focus {
     outline: 2px solid #3b82f6 !important;
     outline-offset: 2px !important;
