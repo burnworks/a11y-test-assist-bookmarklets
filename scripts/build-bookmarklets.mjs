@@ -42,7 +42,7 @@ for (const name of bookmarklets) {
     }
     const block = `${startMarker}\n\n\`\`\`text\n${bookmarklet}\n\`\`\`\n\n${endMarker}`;
     const nextReadme = readme.replace(
-        new RegExp(`${startMarker}[\\s\\S]*?${endMarker}`),
+        new RegExp(`${startMarker}[\\s\\S]*${endMarker}`),
         () => block,
     );
     await writeFile(readmePath, `${nextReadme.trimEnd()}\n`, 'utf8');

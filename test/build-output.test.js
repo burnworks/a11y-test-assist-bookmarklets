@@ -28,5 +28,7 @@ for (const name of bookmarklets) {
         assert.equal(code.includes('\n'), false);
         assert.equal(code.includes('github.io'), false);
         assert.ok(readme.includes(`\`\`\`text\n${code}\n\`\`\``));
+        assert.equal(readme.split('<!-- bookmarklet:start -->').length - 1, 1);
+        assert.equal(readme.split('<!-- bookmarklet:end -->').length - 1, 1);
     });
 }
