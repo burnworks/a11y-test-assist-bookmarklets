@@ -8,6 +8,13 @@ const COLORS = {
     success: '#047857',
 };
 
+const SEVERITY_LABELS = {
+    error: 'エラー候補',
+    warning: '要確認',
+    info: '情報',
+    success: '確認済み',
+};
+
 function setStyles(element, declarations) {
     Object.assign(element.style, declarations);
 }
@@ -131,6 +138,10 @@ function createUi(document, id, title, destroy) {
     const detail = makeElement(document, 'div', '枠にマウスを重ねるか、対象へフォーカスすると詳細を表示します。');
     const button = makeElement(document, 'button', '終了');
 
+    overlay.setAttribute('aria-hidden', 'true');
+    panel.setAttribute('role', 'region');
+    panel.setAttribute('aria-label', title);
+    summary.setAttribute('role', 'status');
     setStyles(overlay, { position: 'fixed', inset: '0', pointerEvents: 'none' });
     setStyles(panel, {
         all: 'initial',
@@ -309,10 +320,19 @@ export function startInspector(config) {
         scheduled = false;
         if (destroyed) return;
         const context = getSameOriginDocuments(topDocument);
-        results = config.scan(context.documents).filter(result => result?.element);
+        try {
+            results = config.scan(context.documents).filter(result => result?.element);
+        } catch (error) {
+            results = [];
+            resultByElement = new WeakMap();
+            ui.summary.textContent = `検査中にエラーが発生しました: ${error instanceof Error ? error.message : String(error)}`;
+            attach(context.documents);
+            draw();
+            return;
+        }
         resultByElement = new WeakMap(results.map(result => [result.element, result]));
         const counts = results.reduce((map, result) => map.set(result.severity, (map.get(result.severity) || 0) + 1), new Map());
-        const countText = [...counts].map(([severity, count]) => `${severity}: ${count}`).join(' / ');
+        const countText = [...counts].map(([severity, count]) => `${SEVERITY_LABELS[severity] || severity}: ${count}`).join(' / ');
         ui.summary.textContent = `${results.length}件${countText ? `（${countText}）` : ''}${context.inaccessibleFrames.length ? `・検査不能iframe ${context.inaccessibleFrames.length}件` : ''}`;
         attach(context.documents);
         draw();

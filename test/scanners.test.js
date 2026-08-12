@@ -40,6 +40,7 @@ test('form checker distinguishes good names, fallback names, and missing names',
         <input id="fallback" placeholder="Search">
         <input id="missing">
         <button id="button"><img alt="Save"></button>
+        <input id="default-submit" type="submit">
         <input type="hidden" id="hidden">
     `);
     const results = byId(scanFormLabels([document]));
@@ -47,6 +48,7 @@ test('form checker distinguishes good names, fallback names, and missing names',
     assert.equal(results.fallback.severity, 'warning');
     assert.equal(results.missing.severity, 'error');
     assert.match(results.button.detail, /Save/);
+    assert.match(results['default-submit'].detail, /ブラウザ既定/);
     assert.equal(results.hidden, undefined);
 });
 
@@ -123,4 +125,3 @@ test('non-HTML link checker uses the URL pathname and supports query strings', (
     assert.equal(results.html, undefined);
     assert.equal(extensionFromLink(document.querySelector('#pdf')), 'pdf');
 });
-

@@ -11,6 +11,14 @@ export function scanFocused(documents) {
     return documents.flatMap(document => {
         const element = deepestActiveElement(document);
         if (!element || element === document.body || element === document.documentElement) return [];
+        if (element.matches('iframe, frame')) {
+            try {
+                const nested = element.contentDocument && deepestActiveElement(element.contentDocument);
+                if (nested && nested !== element.contentDocument.body && nested !== element.contentDocument.documentElement) return [];
+            } catch {
+                // A cross-origin frame itself can still be highlighted.
+            }
+        }
         return [{
             element,
             label: 'FOCUS',

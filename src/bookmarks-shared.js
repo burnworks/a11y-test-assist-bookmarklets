@@ -49,6 +49,8 @@ export function accessibleNameInfo(element) {
         if (['button', 'submit', 'reset'].includes(type)) {
             const name = normalizeText(element.value);
             if (name) return { name, source: 'value' };
+            if (!element.hasAttribute('value') && type === 'submit') return { name: '送信（ブラウザ既定）', source: '既定値' };
+            if (!element.hasAttribute('value') && type === 'reset') return { name: 'リセット（ブラウザ既定）', source: '既定値' };
         }
     }
 
