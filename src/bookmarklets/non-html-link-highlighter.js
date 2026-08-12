@@ -1,7 +1,7 @@
 import { allMatching, elementDescription, extensionFromLink } from '../bookmarks-shared.js';
 import { isRendered, startInspector } from '../runtime.js';
 
-const extensions = new Set(['pdf', 'xls', 'xlsx', 'doc', 'docx', 'ppt', 'pptx', 'zip']);
+const extensions = new Set(['pdf', 'xls', 'xlsx', 'ods', 'csv', 'doc', 'docx', 'odt', 'rtf', 'ppt', 'pptx', 'odp', 'epub', 'zip']);
 
 export function scanNonHtmlLinks(documents) {
     return allMatching(documents, 'a[href]').filter(isRendered).flatMap(element => {

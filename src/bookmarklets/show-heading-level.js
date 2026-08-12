@@ -2,9 +2,10 @@ import { allMatching, elementDescription } from '../bookmarks-shared.js';
 import { isRendered, normalizeText, startInspector } from '../runtime.js';
 
 function headingLevel(element) {
-    if (/^h[1-6]$/.test(element.localName)) return Number(element.localName[1]);
     const raw = normalizeText(element.getAttribute('aria-level'));
-    return /^\d+$/.test(raw) && Number(raw) > 0 ? Number(raw) : null;
+    if (element.getAttribute('role') === 'heading') return /^\d+$/.test(raw) && Number(raw) > 0 ? Number(raw) : null;
+    if (/^h[1-6]$/.test(element.localName)) return Number(element.localName[1]);
+    return null;
 }
 
 export function scanHeadings(documents) {

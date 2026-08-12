@@ -17,7 +17,7 @@ function getSameOriginDocuments(startDocument) {
     const inaccessibleFrames = [];
     const visit = document => {
         documents.push(document);
-        for (const frame of document.querySelectorAll('iframe, frame')) {
+        for (const frame of queryAllDeep(document, 'iframe, frame')) {
             try {
                 if (frame.contentDocument?.documentElement) {
                     visit(frame.contentDocument);
@@ -60,13 +60,24 @@ export function isRendered(element) {
     return element.getClientRects().length > 0;
 }
 
+export function hasComposedAncestor(element, selector) {
+    let current = element;
+    while (current) {
+        if (current.matches?.(selector)) return true;
+        const root = current.getRootNode?.();
+        current = current.parentElement || root?.host || null;
+    }
+    return false;
+}
+
 export function normalizeText(value) {
     return String(value ?? '').replace(/\s+/g, ' ').trim();
 }
 
 export function referencedText(element, attributeName) {
     const ids = normalizeText(element.getAttribute(attributeName)).split(' ').filter(Boolean);
-    return normalizeText(ids.map(id => element.ownerDocument.getElementById(id)?.textContent ?? '').join(' '));
+    const root = element.getRootNode();
+    return normalizeText(ids.map(id => root.getElementById?.(id)?.textContent ?? element.ownerDocument.getElementById(id)?.textContent ?? '').join(' '));
 }
 
 function rectInTopViewport(element, topWindow) {
@@ -208,6 +219,7 @@ export function startInspector(config) {
     let markers = [];
     let observers = [];
     let listeningDocuments = [];
+    let resultByElement = new WeakMap();
     let ui;
 
     const destroy = () => {
@@ -219,6 +231,7 @@ export function startInspector(config) {
             currentDocument.removeEventListener('pointerover', selectFromEvent, true);
             currentDocument.removeEventListener('focusin', selectFromEvent, true);
             currentDocument.removeEventListener('focusin', scheduleScan, true);
+            currentDocument.removeEventListener('load', scheduleScan, true);
             currentDocument.defaultView?.removeEventListener('scroll', scheduleDraw, true);
             currentDocument.defaultView?.removeEventListener('resize', scheduleDraw, true);
         }
@@ -236,7 +249,7 @@ export function startInspector(config) {
 
     function selectFromEvent(event) {
         const path = event.composedPath?.() || [event.target];
-        const result = results.find(item => path.some(node => node === item.element || item.element?.contains?.(node)));
+        const result = path.map(node => resultByElement.get(node)).find(Boolean);
         if (result) showDetail(result);
     }
 
@@ -272,6 +285,7 @@ export function startInspector(config) {
             currentDocument.removeEventListener('pointerover', selectFromEvent, true);
             currentDocument.removeEventListener('focusin', selectFromEvent, true);
             currentDocument.removeEventListener('focusin', scheduleScan, true);
+            currentDocument.removeEventListener('load', scheduleScan, true);
             currentDocument.defaultView?.removeEventListener('scroll', scheduleDraw, true);
             currentDocument.defaultView?.removeEventListener('resize', scheduleDraw, true);
         }
@@ -280,6 +294,7 @@ export function startInspector(config) {
             currentDocument.addEventListener('pointerover', selectFromEvent, true);
             currentDocument.addEventListener('focusin', selectFromEvent, true);
             currentDocument.addEventListener('focusin', scheduleScan, true);
+            currentDocument.addEventListener('load', scheduleScan, true);
             currentDocument.defaultView?.addEventListener('scroll', scheduleDraw, true);
             currentDocument.defaultView?.addEventListener('resize', scheduleDraw, true);
             for (const root of getRoots(currentDocument)) {
@@ -295,6 +310,7 @@ export function startInspector(config) {
         if (destroyed) return;
         const context = getSameOriginDocuments(topDocument);
         results = config.scan(context.documents).filter(result => result?.element);
+        resultByElement = new WeakMap(results.map(result => [result.element, result]));
         const counts = results.reduce((map, result) => map.set(result.severity, (map.get(result.severity) || 0) + 1), new Map());
         const countText = [...counts].map(([severity, count]) => `${severity}: ${count}`).join(' / ');
         ui.summary.textContent = `${results.length}件${countText ? `（${countText}）` : ''}${context.inaccessibleFrames.length ? `・検査不能iframe ${context.inaccessibleFrames.length}件` : ''}`;

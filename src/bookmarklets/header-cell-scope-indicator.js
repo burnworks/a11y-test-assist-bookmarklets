@@ -13,7 +13,7 @@ export function scanHeaderCells(documents) {
             element,
             label,
             severity: !hasScope ? 'info' : valid ? 'success' : 'error',
-            detail: `${elementDescription(element)}：${!hasScope ? 'scope属性なし（単純な表では直ちにエラーとは限りません）' : valid ? `scope="${scope}"` : `不正なscope値「${scope || '空'}」`}`,
+            detail: `${elementDescription(element)}：${!hasScope ? 'scope属性なし（単純な表では直ちにエラーとは限りません）' : valid ? `scope="${scope}"` : `不正なscope値「${scope || '空'}」`}${element.id ? `、id="${element.id}"` : ''}${element.hasAttribute('headers') ? `、headers="${element.getAttribute('headers')}"` : ''}`,
         };
     });
 }

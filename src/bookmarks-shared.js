@@ -15,7 +15,7 @@ function textAlternative(node) {
     if (node.nodeType === node.TEXT_NODE) return node.nodeValue;
     if (node.nodeType !== node.ELEMENT_NODE) return '';
     const element = node;
-    if (element.matches('[hidden], [aria-hidden="true"]')) return '';
+    if (element.matches('[hidden], [aria-hidden="true" i]')) return '';
     if (element.localName === 'img') return element.getAttribute('alt') || '';
     return [...element.childNodes].map(textAlternative).join(' ');
 }
@@ -59,6 +59,11 @@ export function accessibleNameInfo(element) {
     return { name: '', source: 'なし' };
 }
 
+export function isEffectivelyDisabled(element) {
+    if (element.matches(':disabled')) return true;
+    return false;
+}
+
 export function extensionFromLink(link) {
     let pathname;
     try {
@@ -74,4 +79,3 @@ export function extensionFromLink(link) {
     const match = pathname.match(/\.([a-z0-9]{1,8})$/i);
     return match?.[1].toLowerCase() || '';
 }
-
