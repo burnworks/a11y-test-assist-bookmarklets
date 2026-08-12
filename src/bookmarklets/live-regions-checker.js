@@ -201,7 +201,7 @@ export function createAriaNotifyInstrumentation() {
 const instrumentAriaNotify = createAriaNotifyInstrumentation();
 
 if (typeof window !== 'undefined') startInspector({
-    id: 'live-regions-check',
+    id: 'live-regions-checker',
     title: 'ライブリージョン監視',
     logTitle: '更新ログ（新しい順）',
     scan: scanLiveRegions,

@@ -7,7 +7,7 @@ import {
     liveRegionInfo,
     mutationReports,
     scanLiveRegions,
-} from '../src/bookmarklets/live-regions-check.js';
+} from '../src/bookmarklets/live-regions-checker.js';
 
 test('live region metadata includes explicit and implicit live settings', () => {
     const dom = new JSDOM(`
@@ -94,7 +94,7 @@ test('ariaNotify instrumentation logs Document and Element calls and restores or
 });
 
 test('built bookmarklet records live updates and ariaNotify calls end to end', async () => {
-    const code = (await readFile('live-regions-check/live-regions-check.js', 'utf8')).trim().replace(/^javascript:/, '');
+    const code = (await readFile('live-regions-checker/live-regions-checker.js', 'utf8')).trim().replace(/^javascript:/, '');
     const dom = new JSDOM('<div id="region" role="status"></div>', {
         pretendToBeVisual: true,
         runScripts: 'dangerously',
@@ -113,14 +113,14 @@ test('built bookmarklet records live updates and ariaNotify calls end to end', a
     document.ariaNotify('Saved');
     await new Promise(resolve => dom.window.setTimeout(resolve, 50));
 
-    const host = document.querySelector('[data-a11y-test-assist-root="live-regions-check"]');
+    const host = document.querySelector('[data-a11y-test-assist-root="live-regions-checker"]');
     const logText = [...host.shadowRoot.querySelectorAll('ol li')].map(item => item.textContent).join('\n');
     assert.match(logText, /Updated status/);
     assert.match(logText, /ariaNotify/);
     assert.deepEqual(calls, ['Saved']);
 
     dom.window.eval(code);
-    assert.equal(document.querySelector('[data-a11y-test-assist-root="live-regions-check"]'), null);
+    assert.equal(document.querySelector('[data-a11y-test-assist-root="live-regions-checker"]'), null);
     assert.equal(Document.prototype.ariaNotify, original);
     dom.window.close();
 });
