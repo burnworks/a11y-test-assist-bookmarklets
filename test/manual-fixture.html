@@ -13,6 +13,10 @@
         table { border-collapse: collapse; }
         th, td { border: 1px solid; padding: .5rem; }
         .mouse-only { display: inline-block; padding: .5rem; background: #ddd; cursor: pointer; }
+        .clipped-text { width: 12rem; height: 1.4rem; overflow: hidden; white-space: nowrap; border: 1px solid; }
+        .small-targets { display: flex; align-items: center; gap: 2px; margin-block: 1rem; }
+        .small-targets button, .spaced-target { box-sizing: border-box; width: 18px; height: 18px; padding: 0; }
+        .spaced-target { margin: 20px; }
     </style>
 </head>
 <body>
@@ -80,6 +84,53 @@
         <button id="notify-normal">ariaNotify normal</button>
         <button id="notify-high">ariaNotify high</button>
     </section>
+
+    <section aria-labelledby="references-heading">
+        <h2 id="references-heading">ID参照</h2>
+        <p id="reference-description">正しく参照できる説明</p>
+        <button aria-describedby="reference-description">正常な参照</button>
+        <button aria-controls="missing-panel">参照切れ</button>
+        <span id="duplicate-reference">重複1</span><span id="duplicate-reference">重複2</span>
+        <button aria-controls="duplicate-reference">重複IDへの参照</button>
+    </section>
+
+    <section aria-labelledby="hidden-focus-heading">
+        <h2 id="hidden-focus-heading">aria-hidden内のフォーカス</h2>
+        <div aria-hidden="true">
+            <button>aria-hidden内のTab移動先</button>
+            <button tabindex="-1" id="hidden-programmatic">プログラムフォーカス</button>
+        </div>
+        <button id="focus-hidden-programmatic">隠れた要素へフォーカス</button>
+    </section>
+
+    <header aria-label="重複バナー">ランドマーク確認用header</header>
+    <div role="banner" aria-label="2つ目のバナー">明示的な重複banner</div>
+    <main aria-label="重複メイン">ランドマーク確認用main</main>
+    <div role="main" aria-label="2つ目のメイン">明示的な重複main</div>
+    <nav aria-label="Primary">ランドマーク確認用nav</nav>
+    <nav>名前のない2つ目のnav</nav>
+
+    <section aria-labelledby="dialog-heading">
+        <h2 id="dialog-heading">ダイアログ</h2>
+        <button id="open-dialog">モーダルを開く</button>
+        <dialog id="test-dialog" aria-labelledby="test-dialog-title">
+            <h3 id="test-dialog-title">設定</h3>
+            <button>ダイアログ内ボタン</button>
+            <button id="close-dialog">閉じる</button>
+        </dialog>
+    </section>
+
+    <section aria-labelledby="spacing-heading">
+        <h2 id="spacing-heading">文字間隔</h2>
+        <p class="clipped-text">間隔を広げると固定領域から切れる可能性がある長いテキストです。</p>
+    </section>
+
+    <section aria-labelledby="target-size-heading">
+        <h2 id="target-size-heading">ターゲットサイズ</h2>
+        <div class="small-targets"><button>A</button><button>B</button></div>
+        <button class="spaced-target">C</button>
+        <p>文章中の<a href="#target">小さい行内リンク</a>も確認します。</p>
+    </section>
     <script>
         document.querySelector('#add-image').addEventListener('click', () => {
             document.querySelector('#dynamic').append(document.createElement('img'));
@@ -106,6 +157,15 @@
         });
         document.querySelector('#notify-high').addEventListener('click', () => {
             document.ariaNotify('High priority notification', { priority: 'high' });
+        });
+        document.querySelector('#focus-hidden-programmatic').addEventListener('click', () => {
+            document.querySelector('#hidden-programmatic').focus();
+        });
+        document.querySelector('#open-dialog').addEventListener('click', () => {
+            document.querySelector('#test-dialog').showModal();
+        });
+        document.querySelector('#close-dialog').addEventListener('click', () => {
+            document.querySelector('#test-dialog').close();
         });
     </script>
 </body>
